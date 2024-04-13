@@ -1,0 +1,162 @@
+#temporaire (jour1) 
+
+import random
+import networkx as nx
+
+# Création du graphe
+G = nx.Graph()
+
+# Ajout des nœuds du backbone (Tier 1)
+backbone_nodes = range(1, 11)
+G.add_nodes_from(backbone_nodes)
+
+# Création des arêtes du backbone avec une probabilité de 75%
+for u in backbone_nodes:
+    for v in backbone_nodes:
+        if u < v and random.random() < 0.75:
+            weight = random.randint(5, 10)
+            G.add_edge(u, v, weight=weight)
+
+# Ajout des opérateurs de niveau 2 (Tier 2)
+tier2_nodes = range(11, 31)
+G.add_nodes_from(tier2_nodes)
+
+for node in tier2_nodes:
+    backbone_neighbors = random.sample(backbone_nodes, random.randint(1, 2))
+    tier2_neighbors = random.sample(tier2_nodes, random.randint(2, 3))
+    neighbors = backbone_neighbors + tier2_neighbors
+    for neighbor in neighbors:
+        weight = random.randint(10, 20)
+        G.add_edge(node, neighbor, weight=weight)
+
+# Ajout des opérateurs de niveau 3 (Tier 3)
+tier3_nodes = range(31, 101)
+G.add_nodes_from(tier3_nodes)
+
+for node in tier3_nodes:
+    tier2_neighbors = random.sample(tier2_nodes, 2)
+    for neighbor in tier2_neighbors:
+        weight = random.randint(20, 50)
+        G.add_edge(node, neighbor, weight=weight)
+
+# Affichage de la topologie du réseau
+print("Nombre de nœuds :", G.number_of_nodes())
+print("Nombre d'arêtes :", G.number_of_edges())
+
+
+import matplotlib.pyplot as plt
+
+# Dessiner le graphe
+
+
+
+import matplotlib.pyplot as plt
+import math
+
+"""
+
+import numpy as np
+
+# Création du graphe
+G = nx.Graph()
+
+# Ajout des nœuds du backbone (Tier 1)
+backbone_nodes = range(1, 11)
+G.add_nodes_from(backbone_nodes, tier=1)
+
+# Création des arêtes du backbone avec une probabilité de 75%
+for u in backbone_nodes:
+    for v in backbone_nodes:
+        if u < v and random.random() < 0.75:
+            G.add_edge(u, v)
+
+# Ajout des opérateurs de niveau 2 (Tier 2)
+tier2_nodes = range(11, 31)
+G.add_nodes_from(tier2_nodes, tier=2)
+
+for node in tier2_nodes:
+    backbone_neighbors = random.sample(backbone_nodes, random.randint(1, 2))
+    for neighbor in backbone_neighbors:
+        G.add_edge(node, neighbor)
+
+# Ajout des opérateurs de niveau 3 (Tier 3)
+tier3_nodes = range(31, 101)
+G.add_nodes_from(tier3_nodes, tier=3)
+
+for node in tier3_nodes:
+    tier2_neighbors = random.sample(tier2_nodes, 2)
+    for neighbor in tier2_neighbors:
+        G.add_edge(node, neighbor)
+
+# Positionnement des nœuds en forme de fleur
+def flower_layout(G):
+    num_nodes = len(G)
+    petal_count = 6  # Nombre de pétales
+    petal_radius = 1  # Rayon des pétales
+    positions = {}
+    for i, node in enumerate(G.nodes()):
+        angle = (i % petal_count) * (2 * np.pi / petal_count)
+        radius = petal_radius * (1 + (i // petal_count))  # Étendre les pétales
+        x = radius * np.cos(angle)
+        y = radius * np.sin(angle)
+        positions[node] = (x, y)
+    return positions
+
+# Positionnement des nœuds en forme de fleur
+pos = flower_layout(G)
+
+# Dessiner le graphe avec des paramètres personnalisés
+plt.figure(figsize=(10, 8))
+nx.draw(G, pos, with_labels=True, node_size=200, font_size=8, node_color=["lightblue" if G.nodes[v]["tier"] == 1 else "lightgreen" if G.nodes[v]["tier"] == 2 else "lightcoral" for v in G.nodes], width=0.5)
+
+# Afficher le graphe
+plt.title("Topologie du réseau")
+plt.show()
+"""
+#graphe basique
+
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Création du graphe
+G = nx.Graph()
+
+# Ajout des nœuds du backbone (Tier 1)
+backbone_nodes = range(1, 11)
+G.add_nodes_from(backbone_nodes, tier=1)
+
+# Création des arêtes du backbone avec une probabilité de 75%
+for u in backbone_nodes:
+    for v in backbone_nodes:
+        if u < v and random.random() < 0.75:
+            G.add_edge(u, v)
+
+# Ajout des opérateurs de niveau 2 (Tier 2)
+tier2_nodes = range(11, 31)
+G.add_nodes_from(tier2_nodes, tier=2)
+
+for node in tier2_nodes:
+    backbone_neighbors = random.sample(backbone_nodes, random.randint(1, 2))
+    for neighbor in backbone_neighbors:
+        G.add_edge(node, neighbor)
+
+# Ajout des opérateurs de niveau 3 (Tier 3)
+tier3_nodes = range(31, 101)
+G.add_nodes_from(tier3_nodes, tier=3)
+
+for node in tier3_nodes:
+    tier2_neighbors = random.sample(tier2_nodes, 2)
+    for neighbor in tier2_neighbors:
+        G.add_edge(node, neighbor)
+
+# Positionnement des nœuds en fonction du niveau
+pos = nx.multipartite_layout(G, subset_key="tier", scale=1.5)
+
+# Dessiner le graphe avec des paramètres personnalisés
+plt.figure(figsize=(10, 8))
+nx.draw(G, pos, with_labels=True, node_size=200, font_size=8, node_color=["lightblue" if G.nodes[v]["tier"] == 1 else "lightgreen" if G.nodes[v]["tier"] == 2 else "lightcoral" for v in G.nodes], width=0.5)
+
+# Afficher le graphe
+plt.title("Topologie du réseau")
+plt.show()
